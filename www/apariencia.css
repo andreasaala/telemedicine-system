@@ -1,0 +1,190 @@
+:root {
+    /*Paleta de colores*/
+    --color1: #283241;
+    --color2: #3d5a80;
+    --color3: #98c1d9;
+    --color4: #ee6c4d;
+    --blanco: white;
+}
+
+/*GENERAL*/
+body {
+    background: var(--color3);
+    margin: 0;
+    margin-top: 3em;
+}
+h1,h2 {
+    text-align: center;
+    color: var(--color1);
+}
+
+.vista input{
+    font-size: 1em;
+}
+
+.espacio { /*Distancia entre footer y contenido*/
+    margin-bottom: 3em;
+}
+
+/*SESION INICIO*/
+#contenedor{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.acceso, .expediente, .datosMedico, .bordeChat { /*Para que se vea sección delimitada*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--blanco);
+    margin: 0.5em;
+    color: var(--negro);
+    border: 0.6em solid var(--color2);
+    border-radius: 1em;
+    padding: 0.2em 3em;
+}
+
+/*MARGIN DE LAS VISTAS DONDE SE MUESTRAN LAS TABLAS*/
+.inicio, .asignados {
+    margin: 3em;
+    margin-top: 1em;
+}
+
+/*TABLA*/
+table {
+    table-layout: fixed;
+    width: 100%;
+    background-color: var(--blanco);
+}
+
+thead {
+    background-color: var(--color2);
+    color: var(--blanco);
+}
+th, td {
+    padding: 1em;
+}
+
+table, tr, th, td {
+    border-collapse: collapse;
+    border: 0.2em solid var(--color2);
+    border-radius: 0.2em;
+    padding:0.5em;
+}
+
+.filaAsignados:hover {
+    background-color: var(--color3);
+}
+
+
+/*BOTONES*/
+
+#contenedorSesion { /*Poner boton al lado del medico q inicia sesión*/
+    display: flex;
+    align-items: center;
+}
+
+#medico { /*Es el bienvenido medico*/
+    padding-right: 0.5em;
+    font-size: 1.2em;
+}
+
+button {
+    background-color: var(--blanco);
+    border: 3px solid var(--color1);
+    border-radius: 5em;
+    font-size: 1em;
+    padding: 0.2em 0.7em;
+}
+
+button:hover {
+    background: var(--color1);
+    color: var(--blanco);
+}
+
+.eliminar:hover {
+    background: var(--color4);
+}
+
+/*FOOTER*/
+footer {
+    display: block;
+    bottom: 0%;
+    padding: 1em;
+    margin: 0;
+    background-color: var(--color1);
+    color: var(--blanco);
+    margin-bottom: 0;
+}
+
+/*DISEÑO RESPONSIVE*/
+@media only screen and (max-width: 480px) {
+    body {
+        margin: 2em 0;
+    }
+    h1, h2 {
+        font-size: 1.2em; /* Más pequeño para pantallas aún más pequeñas */
+    }
+
+    .expediente, .datosMedico, .bordeChat {
+        padding: 0.5em 1em;
+        width: 85%; /* Ajuste de ancho en pantallas más pequeñas */
+    }
+
+    .acceso{
+        padding: 0.5em 1em;
+        width: 80%;
+    }
+
+
+    button {
+        font-size: 0.8em;
+        padding: 0.5em 0.7em;
+        margin: auto;        
+    }
+    .tabla-contenedor {
+        width: 100%;
+        overflow-x: auto; 
+        -webkit-overflow-scrolling: touch; 
+    }
+    table {
+        width: 100%;
+        border: 10px;
+        background-color: transparent;
+    }
+
+    /*Visualizar tabla verticalmente*/
+    thead { /*Se quita la cabecera pq cada cerda tendrá su campo indicado*/
+        display: none;
+    }
+
+    tr{
+        display: flex;
+        flex-direction: column;
+        padding: 1em;
+        border-radius: 20px;
+        margin-bottom: 5px;
+        background-color: var(--blanco);
+    }
+
+    td,th {
+        padding: 0.3em 0.1em;
+        border: 0.5em grey;
+        border-radius: 10px;
+    }
+
+    td[data-titulo]{ /*Para poner nombre en cada campo de cada fila*/
+        display: flex;
+    }
+    td[data-titulo]::before{
+        content: attr(data-titulo);
+        width: 8em;
+        color: var(--color1);
+        font-weight: bold;
+        margin-right: 3px;
+    }
+    input#usuario, input#contraseña {
+        width: 60%;
+    }
+}

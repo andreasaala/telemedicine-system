@@ -1,0 +1,5 @@
+# Ignora node_modules (muy importante)
+node_modules/
+
+# Configuración local de VSCode (puede variar entre usuarios)
+.vscode/

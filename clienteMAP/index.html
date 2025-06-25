@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación MAP</title>
+    <link href="../comun/apariencia.css" rel="stylesheet" media="screen">
+    <style>
+        .vista { display: none;}
+        .vista.visible { display : block;}
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Gestión de Interconsultas Atención Primaria</h1>
+        <h2>Generalitat Valenciana</h2>
+    </header>
+    <main id="contenedor">
+        <!--Esta es la interfaz visual de la página de inicio-->
+        <div class="espacio">
+            <div class="vista acceso" id="InterfazInicio">
+                <h1>ACCESO</h1>
+                <label><strong>Usuario: </strong><input id="usuario"></label> <br><br>
+                <label><strong>Contraseña: </strong><input id="contraseña"></label> <br><br><br> 
+                <button onclick="iniciarSesion()">Entrar</button>
+                <button onclick="registrarMedico()">Registrarse</button><br><br>  
+            </div>
+        </div>
+
+        <!--Esta es la interfaz visual del registro de un médico-->
+        <div class="espacio">
+            <div class="vista datosMedico" id="InterfazRegistro">
+                <h1>DATOS MÉDICO</h1>
+                <label>Nombre: <input id="nombre"></label> <br><br>
+                <label>Apellidos: <input id="apellidos"></label> <br><br>
+                <label>Login: <input id="login"></label> <br><br>
+                <label>Contraseña: <input id="password" type="password"></label> <br><br>
+                <label>Centro: <select name="centro" id="centro"></select></label> <br><br><br>
+                <button type="submit" onclick="guardar()">Guardar</button>
+                <button type="submit" onclick="cancelar()">Cancelar</button><br><br>
+            </div>
+        </div>
+
+        <!--Esta es la interfaz visual de cuando el médico inicia sesión-->
+        <div class="vista inicio" id="InterfazMedico">
+            <h1>INICIO</h1>
+            <div id="contenedorSesion">
+                <p id="medico"></p> 
+                <button onclick="editarDatos()" >Editar datos</button> <br><br>
+            </div>
+            
+            <table class="tabla-contenedor">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha de Creación</th>
+                        <th>Fecha de asignación</th>
+                        <th>Fecha de resolución</th>
+                        <th>Especialidad</th>
+                        <th>SIP del paciente</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaExpedientes">
+
+                </tbody>
+            </table><br><br>
+            <button onclick="recopilarDatosCantabria()" >Enviar al sistema</button> <br><br>
+            <button onclick="obtenerNumRegistro()" >Numero de registros</button> <br><br>
+            <button onclick="nuevoExpediente()" >Nuevo expediente</button> <br><br>
+            <button onclick="salir()" >Salir</button> <br><br>
+        </div>
+
+        <!--Esta es la interfaz visual de cuando añade un expediente-->
+        <div class="vista expediente" id="InterfazExpediente">
+            <h1>EXPEDIENTE</h1>
+            <label>ID: <input id="id" disabled></label> <br><br>
+            <label>Med. Esp.: <input id="medEsp" disabled></label> <br><br>
+            <label>Especialidad: <select id="especialidad"> </select></label> <br><br>
+            <label>SIP: <input id="sip"></label> <br><br>
+            <label>Nombre: <input type="text" id="nombreP"></label> <br><br>
+            <label>Apellidos: <input type="text" id="apellidosP"></label> <br><br>
+            <label>F. Nacimiento: <input type="date" id="fechaNac"></label> <br><br>
+            <label>Género: <select id="genero">
+                <option value="1">Mujer</option>
+                <option value="2">Hombre</option>
+            </select></label> <br><br>
+            <label>Observaciones: <textarea id="observaciones"></textarea></label> <br><br>
+            <label>Solicitud: <textarea id="solicitud"></textarea></label> <br><br>
+            <label>Respuesta: <textarea id="respuesta" disabled></textarea></label> <br><br>
+            <label>F. Solicitud: <input id="fechaSol" disabled></label> <br><br>
+            <label>F. Asignación: <input id="fechaAsig" disabled></label> <br><br>
+            <label>F. Resolución: <input id="fechaRes" disabled></label> <br><br>
+
+            <button onclick="guardarExp()">Guardar</button>
+            <button onclick="volverListado()">Volver al listado</button><br><br>
+            <h2>IMÁGENES</h2>
+            <button onclick="guardarFoto()">Tomar foto</button><br><br>
+
+            <table class="tabla-contenedor"> <!--Tabla de las fotos del expediente-->
+                <thead>
+                    <tr>
+                        <th style="width: 2em;">ID</th>
+                        <th style="width: 10em;">Fecha de Creación</th>
+                        <th style="width: 45em;">Foto</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaFotos">
+    
+                </tbody>
+            </table><br><br>
+
+        </div><br><br>
+
+        <!--Esta es la interfaz visual del CHAT-->
+        <div class="vista bordeChat" id="InterfazChat">
+            <h1>CHAT</h1>
+            <ul id="listaMensajes"></ul>
+            <label>Mensaje: <input type="text" id="mensaje"></label>
+            <button onclick="enviarMensaje()">Enviar</button>
+            <button onclick="salirChat()">Atrás</button>
+        </div>
+
+        <script src="rest.js"></script>
+        <script src="main.js"></script>
+        <script src="cordova.js"></script>
+        <script>
+            // Aquí se agrupan las funciones de cambiar de interfaz al pulsar los botones y los de vaciar campos
+
+            function registrarMedico(){
+                cambiarVista("InterfazRegistro");
+                camino = "registro";
+                vaciarCamposMedico(); //Cnd se entre por la parte de registrar nuevo medico los campos se vacian
+            }
+
+            function cancelar(){
+                if (camino == "registro"){
+                    cambiarVista("InterfazInicio");
+                } else if (camino == "editarDatos"){
+                    cambiarVista("InterfazMedico");
+                }
+            }
+
+            function salir(){
+                cambiarVista("InterfazInicio");
+            }
+            function nuevoExpediente(){
+                cambiarVista("InterfazExpediente");
+                vaciarCamposExp();
+                caminoExp = "nuevoExp";
+            }
+            function volverListado(){
+                cambiarVista("InterfazMedico");
+                vaciarCamposExp();
+            }
+
+            function vaciarCamposMedico(){
+                //Interfaz con los campos médico vacíos
+                document.getElementById("nombre").value = "";
+                document.getElementById("apellidos").value = "";
+                document.getElementById("login").value = "";
+                document.getElementById("password").value = "";
+                document.getElementById("centro").value = "";
+            }
+
+            function vaciarCamposExp(){
+                //Interfaz campos expediente vacíos
+                document.getElementById("id").value = "";
+                document.getElementById("especialidad").value = "";
+                document.getElementById("sip").value = "";
+                document.getElementById("nombreP").value = "";
+                document.getElementById("apellidosP").value = "";
+                document.getElementById("fechaNac").value = "";
+                document.getElementById("genero").value = "";
+                document.getElementById("observaciones").value = "";
+                document.getElementById("solicitud").value = "";
+                document.getElementById("medEsp").value ="";
+                document.getElementById("fechaAsig").value = "";
+                document.getElementById("fechaRes").value = ""
+            }
+
+            function salirChat(){
+                cambiarVista("InterfazMedico");
+                var mensaje = document.getElementById("listaMensajes");
+                while (mensaje.firstChild){ // Se borran los mensajes si se sale del chat
+                    mensaje.removeChild(mensaje.firstChild);
+                }
+            }
+
+        </script>
+    </main>
+    <footer>
+        <p>Alumnas: Foley Cisse & Andrea Sala</p>
+        <p>Sistemas Distribuidos. Copyright 2024 &copy;</p>
+    </footer>
+</body>
+</html>

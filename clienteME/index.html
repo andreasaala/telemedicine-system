@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación ME</title>
+    <link href="../comun/apariencia.css" rel="stylesheet" media="screen">
+    <style>
+        .vista { display: none;}
+        .vista.visible { display : block;}
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Gestión de Interconsultas Especializadas</h1>
+        <h2>Generalitat Valenciana</h2>
+    </header>
+    <main id="contenedor">
+        <!--Esta es la interfaz visual de la página de inicio-->
+        <div class="espacio">
+            <div class="vista acceso" id="InterfazInicio">
+                <h1>ACCESO</h1>
+                <label><strong>Usuario: </strong><input id="usuario"></label> <br><br>
+                <label><strong>Contraseña: </strong><input id="contrasenya"></label> <br><br><br> 
+                <button onclick="iniciarSesion()">Entrar</button>
+                <button onclick="registrarMedico()">Registrarse</button><br><br>  
+            </div>
+        </div>
+
+        <!--Esta es la interfaz visual del registro de un médico-->
+        <div class="espacio">
+            <div class="vista datosMedico" id="InterfazRegistro">
+                <h1>DATOS MÉDICO</h1>
+                <label>Nombre: <input id="nombre"></label> <br><br>
+                <label>Apellidos: <input id="apellidos"></label> <br><br>
+                <label>Login: <input id="login"></label> <br><br>
+                <label>Contraseña: <input id="password" type="password"></label> <br><br>
+                <label>Centro: <select name="centro" id="centro"></select></label> <br><br><br>
+                <label>Especialidad: <select class="especialidad" id="esp"></select></label> <br><br><br>
+                <button type="submit" onclick="guardar()">Guardar</button>
+                <button type="submit" onclick="cancelar()">Cancelar</button><br><br>
+            </div>
+        </div>
+
+        <!--Esta es la interfaz visual de cuando el médico inicia sesión-->
+        <div class="vista inicio" id="InterfazMedico">
+            <h1>INICIO</h1>
+            <div id="contenedorSesion">
+                <p id="medico"></p> 
+                <button onclick="editarDatos()" >Editar datos</button> <br><br>
+            </div>
+            <button onclick="asignarExpediente()" >Asignar Expediente</button>
+            <button onclick="expedientesAsig()" >Mostrar Expedientes Asignados</button> <br><br>
+            <button onclick="salir()" >Salir</button> <br><br>
+        </div>
+
+        <!--Esta es la interfaz visual para asignar expedientes-->
+        <div class="vista asignar" id="InterfazAsignar">
+            <h1>ASIGNAR EXPEDIENTE</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha de Creación</th>
+                        <th>MAP</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaExpDis">
+
+                </tbody>
+            </table><br><br>
+            <button onclick="volverInicio()" >Volver al inicio</button> <br><br>
+        </div>
+        <!--Esta es la interfaz visual de los expedientes asignados-->
+        <div class="vista asignados" id="InterfazAsignados">
+            <h1>EXPEDIENTES ASIGNADOS</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha de Creación</th>
+                        <th>Fecha de asignación</th>
+                        <th>Fecha de resolución</th>
+                        <th>SIP</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaExpAsig">
+                </tbody>
+            </table><br><br>
+            <button onclick="volverInicio()" >Volver al inicio</button> <br><br>
+        </div>
+        <!--Esta es la interfaz visual de cuando se accede a un expediente-->
+        <div class="vista expediente" id="InterfazExpediente">
+            <h1>EXPEDIENTE</h1>
+            <label>ID: <input id="id" disabled></label> <br><br>
+            <label>Med. Esp.: <input id="medEsp" disabled></label> <br><br>
+            <label>Especialidad: <select class="especialidad" id="especialidad" disabled></select></label> <br><br>
+            <label>SIP: <input id="sip" disabled></label> <br><br>
+            <label>Nombre: <input type="text" id="nombreP" disabled></label> <br><br>
+            <label>Apellidos: <input type="text" id="apellidosP" disabled></label> <br><br>
+            <label>F. Nacimiento: <input type="date" id="fechaNac" disabled></label> <br><br>
+            <label>Género: <select id="genero" disabled>
+                <option value="1">Mujer</option>
+                <option value="2">Hombre</option>
+            </select></label> <br><br>
+            <label>Observaciones: <textarea id="observaciones" disabled></textarea></label> <br><br>
+            <label>Solicitud: <textarea id="solicitud" disabled></textarea></label> <br><br>
+            <label>Respuesta: <textarea id="respuesta"></textarea></label> <br><br>
+            <label>F. Solicitud: <input id="fechaSol" disabled></label> <br><br>
+            <label>F. Asignación: <input id="fechaAsig" disabled></label> <br><br>
+            <label>F. Resolución: <input id="fechaRes" disabled></label> <br><br>
+            <button onclick="resolverExpediente()">Resolver</button>
+            <button onclick="volverListado()">Volver al listado</button><br><br>
+
+            <h2>IMÁGENES</h2>
+
+            <table class="tabla-contenedor"> <!--Tabla de las fotos del expediente-->
+                <thead>
+                    <tr>
+                        <th style="width: 2em;">ID</th>
+                        <th style="width: 10em;">Fecha de Creación</th>
+                        <th style="width: 45em;">Foto</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaFotos">
+    
+                </tbody>
+            </table><br><br>
+        </div>
+        
+        <!--Esta es la interfaz visual de cuando se accede a un expediente que aun no está asignado-->
+        <div class="vista bordeChat" id="InterfazChat">
+            <h1>CHAT</h1>
+            <ul id="listaMensajes"></ul>
+            <label>Mensaje: <input id="mensaje" type="text"></label>
+            <button onclick="enviarMensaje()">Enviar</button>
+            <button onclick="salirChat()">Atrás</button>
+        </div>
+        
+        <script src="rest.js"></script>
+        <script src="rpc.js"></script>
+        <script src="main.js"></script>
+        <script>
+            function registrarMedico(){
+                cambiarVista("InterfazRegistro");
+                camino = "registro";
+                vaciarCamposMedico(); //Cnd se entre por la parte de registrar nuevo medico los campos se vacian
+            }
+
+            function cancelar(){ // Al pulsar el boton cancelar de la InetrfazRegistro
+                if (camino == "registro"){
+                    cambiarVista("InterfazInicio");
+                } else if (camino == "editarDatos"){
+                    cambiarVista("InterfazMedico");
+                }
+            }
+
+            function salir(){ // Al pulsar el botón salir de la InterfazMedico
+                cambiarVista("InterfazInicio");
+            }
+            function nuevoExpediente(){
+                cambiarVista("InterfazExpediente");
+                fechaActual();
+                caminoExp = "nuevoExp";
+            }
+            function volverInicio(){
+                cambiarVista("InterfazMedico");
+                vaciarCamposExp();
+            }
+
+
+            function vaciarCamposMedico(){
+                //Interfaz con los campos médico vacíos
+                document.getElementById("nombre").value = "";
+                document.getElementById("apellidos").value = "";
+                document.getElementById("login").value = "";
+                document.getElementById("password").value = "";
+                document.getElementById("centro").value = "";
+                document.getElementById("esp").value = "";
+            }
+
+            function vaciarCamposExp(){
+                //Interfaz campos expediente vacíos
+                document.getElementById("especialidad").value = "";
+                document.getElementById("sip").value = "";
+                document.getElementById("nombreP").value = "";
+                document.getElementById("apellidosP").value = "";
+                document.getElementById("fechaNac").value = "";
+                document.getElementById("genero").value = "";
+                document.getElementById("observaciones").value = "";
+                document.getElementById("solicitud").value = "";
+            }
+
+            
+            function salirChat(){
+                if (chat == "individual"){
+                    cambiarVista("InterfazAsignados")
+                    var mensaje = document.getElementById("listaMensajes");
+                    while (mensaje.firstChild){ // Se borran todos los mensajes si se sale del chat
+                        mensaje.removeChild(mensaje.firstChild);
+                    }
+                }
+            
+                else {
+                    cambiarVista("InterfazAsignar")
+                    var mensaje = document.getElementById("listaMensajes");
+                    while (mensaje.firstChild){
+                        mensaje.removeChild(mensaje.firstChild);
+                    }
+                }
+
+            }
+
+
+        </script>
+    </main>
+    <footer>
+        <p>Alumnas: Foley Cisse & Andrea Sala</p>
+        <p>Sistemas Distribuidos. Copyright 2024 &copy;</p>
+    </footer>
+</body>
+</html>
